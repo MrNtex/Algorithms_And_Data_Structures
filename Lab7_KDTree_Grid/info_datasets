@@ -1,0 +1,9 @@
+punkt A: (0, 0)
+punkt B: (10, 10)
+
+ilość artefaktów n: 1000
+maksymalne przemieszczenie w pojedynczym kroku d: 0.5
+promien poszukiwan h: 1.0
+ilość kroków: 20
+
+
