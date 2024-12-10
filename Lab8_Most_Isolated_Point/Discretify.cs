@@ -8,14 +8,10 @@ namespace AIDS8
 {
     public class Discreatify
     {
-        const int precision = 1000;
-        const int freeSpots = 50;
+        const int precision = 5000;
+        
         const int area = precision * precision;
         int[][] shops = new int[precision][];
-
-        int taken = 0;
-
-        bool semaphor = false;
 
         public struct DiscretePoint
         {
@@ -53,48 +49,10 @@ namespace AIDS8
                 Console.WriteLine($"id: {point.id}, x: {x}, y: {y}");
             }
 
-            Queue<DiscretePoint> queue = new Queue<DiscretePoint>(discretePoints);
-
-
-            while (queue.Count > 0 && taken < area - 1)
-            {
-                DiscretePoint point = queue.Dequeue();
-                int x = point.X;
-                int y = point.Y;
-
-                if (x < 0 || x >= precision || y < 0 || y >= precision)
-                {
-                    continue;
-                }
-
-                if (shops[x][y] == -1)
-                {
-                    shops[x][y] = point.id;
-                    taken++;
-                    queue.Enqueue(new DiscretePoint(x + 1, y, point.id));
-                    queue.Enqueue(new DiscretePoint(x - 1, y, point.id));
-                    queue.Enqueue(new DiscretePoint(x, y + 1, point.id));
-                    queue.Enqueue(new DiscretePoint(x, y - 1, point.id));
-                }
-
-                
-            }
-
-            foreach (DiscretePoint dp in discretePoints)
-            {
-                shops[dp.X][dp.Y] = -2;
-            }
-
-            string fileName = $"grid_{precision}_{freeSpots}";
-            string filePath = $"C:\\Users\\ntexy\\Documents\\algorytithms\\Lab8_Most_Isolated_Point\\{fileName}.txt";
-
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                for (int i = 0; i < precision; i++)
-                {
-                    writer.WriteLine(string.Join(",", shops[i]));
-                }
-            }
+            
+            //BFS_Class.BFS(discretePoints, precision, area, shops);
+            Heatmap.GenerateHeatmap(points, precision);
+            
         }
     }
 }
