@@ -9,18 +9,22 @@ namespace AIDS9
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Drawing;
 
     public enum NodeType
     {
         Start,
         End,
-        Empty
+        Empty,
+        DeadEnd
     }
 
     public class Node
     {
         public int x { get; set; }
         public int y { get; set; }
+
+        public int cost { get; set; }   
         public List<(Node, int)> Neighbors { get; set; }
 
         public NodeType nodeType = NodeType.Empty;
@@ -36,6 +40,7 @@ namespace AIDS9
         {
             this.x = x;
             this.y = y;
+            this.cost = cost;
             Neighbors = [(parent, cost)];
         }
     }
@@ -91,7 +96,7 @@ namespace AIDS9
                     }
                     visited.Add((dir.Item1, dir.Item2));
 
-                    List<(int, int, int)> parentDirs = GetDirs(dir.Item1, dir.Item2, 0);
+                    List<(int, int, int)> parentDirs = GetDirs(dir.Item1, dir.Item2, dir.Item3);
                     if (parentDirs.Count != 2)
                     {
                         // add node
@@ -99,8 +104,10 @@ namespace AIDS9
                         if (nodes.ContainsKey((dir.Item1, dir.Item2)))
                         {
                             // It's already in the graph
-                            parent.Neighbors.Add((nodes[(dir.Item1, dir.Item2)], dir.Item3));
-                            nodes[(dir.Item1, dir.Item2)].Neighbors.Add((parent, dir.Item3));
+                            Node node1 = nodes[(dir.Item1, dir.Item2)];
+                            parent.Neighbors.Add((node1, dir.Item3));
+                            node1.Neighbors.Add((parent, dir.Item3));
+                            node1.cost = Math.Min(node1.cost, dir.Item3);
                             continue;
                         }
 
@@ -113,6 +120,9 @@ namespace AIDS9
                         if (labyrinth[dir.Item1][dir.Item2] == 'B')
                         {
                             node.nodeType = NodeType.End;
+                        }else if (parentDirs.Count == 1)
+                        {
+                            node.nodeType = NodeType.DeadEnd;
                         }
 
                         continue;
@@ -127,18 +137,7 @@ namespace AIDS9
             }
 
             Console.WriteLine("Graph built");
-            foreach (KeyValuePair<(int, int), Node> entry in nodes)
-            {
-                if (entry.Value.nodeType == NodeType.Start)
-                {
-                    Console.WriteLine("Start");
-                }
-                else if (entry.Value.nodeType == NodeType.End)
-                {
-                    Console.WriteLine("End");
-                }
-                Console.WriteLine(entry.Key);
-            }
+            PrintGraph(cols, rows);
         }
 
         public static List<(int, int, int)> GetDirs(int row, int col, int cost)
@@ -162,6 +161,65 @@ namespace AIDS9
                 dirs.Add((row, col + 1, cost + 1));
             }
             return dirs;
+        }
+        public static void Color(Node node)
+        {
+            if (node.nodeType == NodeType.Start)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else if (node.nodeType == NodeType.End)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else if (node.nodeType == NodeType.DeadEnd)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+        public static void PrintGraph(int cols, int rows)
+        {
+            foreach (KeyValuePair<(int, int), Node> entry in nodes)
+            {
+                // Save the current color
+                var originalColor = Console.ForegroundColor;
+
+                Color(entry.Value);
+
+                Console.WriteLine($"{entry.Key} - {entry.Value.nodeType.ToString()}");
+
+                // Restore the original color
+                Console.ForegroundColor = originalColor;
+            }
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (nodes.ContainsKey((i, j)))
+                    {
+                        // Save the current color
+                        var originalColor = Console.ForegroundColor;
+
+                        Color(nodes[(i,j)]);
+
+                        Console.Write(nodes[(i,j)].cost);
+
+                        // Restore the original color
+                        Console.ForegroundColor = originalColor;
+                    }
+                    else
+                    {
+                        Console.Write(labyrinth[i][j]);
+                    }
+                }
+                Console.WriteLine();
+            }
+
         }
     }
 
