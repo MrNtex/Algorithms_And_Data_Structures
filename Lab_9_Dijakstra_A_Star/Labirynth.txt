@@ -1,0 +1,21 @@
+A xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+     xx       xx     xx      xx
+x xx xx xxxxx xxxxx  xx x xxxxx
+x xx    xx              x     x
+x xxxxxxxxxxxxxxx xxxxxxx xxxxx
+x xx                    x     x
+x xx xxxxxxxxxxx xx xxxxxxx xxx
+x        xx      xx xx        x
+x xxxxxx xx xx x xx xxxxx xxxxx
+x xx     xx xx x xx     x     x
+xxxxx xxxxx xxxx xx xxxxxxxxx x
+x xxx x     x xx xx xx  x     x
+x xxx x xxx x xxxxx xxx   xxxxx
+x     x xxx    x        x     x
+xxxx  xxxxx x xxxxxxxx xxx xxxx
+x xx        x xx              x
+x xxxxxxxxxxx xx xxxxxx xxxxx x
+x xx    xx          xxx x     x
+x xx xxxxxxxxxxxx x xxx xxxxxxx
+x                 x           x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx B

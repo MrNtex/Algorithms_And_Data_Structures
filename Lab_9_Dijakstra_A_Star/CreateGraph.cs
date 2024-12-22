@@ -16,6 +16,7 @@ namespace AIDS9
         Start,
         End,
         Empty,
+        Dijakstra,
         DeadEnd
     }
 
@@ -24,7 +25,7 @@ namespace AIDS9
         public int x { get; set; }
         public int y { get; set; }
 
-        public int cost { get; set; }   
+        public int cost { get; set; }
         public List<(Node, int)> Neighbors { get; set; }
 
         public NodeType nodeType = NodeType.Empty;
@@ -47,10 +48,10 @@ namespace AIDS9
 
     public class Graph
     {
-        public static Dictionary<(int,int), Node> nodes = new Dictionary<(int, int), Node>();
+        public static Dictionary<(int, int), Node> nodes = new Dictionary<(int, int), Node>();
         static string[] labyrinth = new string[10];
 
-        public static void BuildGraph(string[] newLabyrinth)
+        public static List<Node> BuildGraph(string[] newLabyrinth)
         {
             labyrinth = newLabyrinth;
 
@@ -63,7 +64,7 @@ namespace AIDS9
             {
                 if (labyrinth[0][i] == 'A')
                 {
-                    nodes.Add((0, i), new Node(0,i));
+                    nodes.Add((0, i), new Node(0, i));
                     activeNodes.Push(nodes[(0, i)]);
                     activeNodes.Peek().nodeType = NodeType.Start;
                     break;
@@ -79,7 +80,7 @@ namespace AIDS9
                 visited.Add((parent.x, parent.y));
 
                 List<(int, int, int)> origins = GetDirs(parent.x, parent.y, 0);
-                
+
                 foreach ((int, int, int) d in origins)
                 {
                     dirs.Enqueue(d);
@@ -120,7 +121,8 @@ namespace AIDS9
                         if (labyrinth[dir.Item1][dir.Item2] == 'B')
                         {
                             node.nodeType = NodeType.End;
-                        }else if (parentDirs.Count == 1)
+                        }
+                        else if (parentDirs.Count == 1)
                         {
                             node.nodeType = NodeType.DeadEnd;
                         }
@@ -130,14 +132,16 @@ namespace AIDS9
 
                     foreach ((int, int, int) d in parentDirs)
                     {
-                        if(!visited.Contains((d.Item1, d.Item2))) dirs.Enqueue(d);
+                        if (!visited.Contains((d.Item1, d.Item2))) dirs.Enqueue(d);
                     }
                 }
-                
+
             }
 
             Console.WriteLine("Graph built");
-            PrintGraph(cols, rows);
+            PrintGraph();
+
+            return new List<Node>(nodes.Values);
         }
 
         public static List<(int, int, int)> GetDirs(int row, int col, int cost)
@@ -146,7 +150,7 @@ namespace AIDS9
 
             if (row > 0 && labyrinth[row - 1][col] != 'x')
             {
-                dirs.Add((row - 1, col, cost+1));
+                dirs.Add((row - 1, col, cost + 1));
             }
             if (row < labyrinth.Length - 1 && labyrinth[row + 1][col] != 'x')
             {
@@ -164,25 +168,30 @@ namespace AIDS9
         }
         public static void Color(Node node)
         {
-            if (node.nodeType == NodeType.Start)
+            switch (node.nodeType)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else if (node.nodeType == NodeType.End)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-            else if (node.nodeType == NodeType.DeadEnd)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.White;
+                case NodeType.Start:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    break;
+                case NodeType.End:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                case NodeType.DeadEnd:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case NodeType.Dijakstra:
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
             }
         }
-        public static void PrintGraph(int cols, int rows)
+        public static void PrintGraph()
         {
+            int rows = labyrinth.Length;
+            int cols = labyrinth[0].Length;
+
             foreach (KeyValuePair<(int, int), Node> entry in nodes)
             {
                 // Save the current color
@@ -205,9 +214,9 @@ namespace AIDS9
                         // Save the current color
                         var originalColor = Console.ForegroundColor;
 
-                        Color(nodes[(i,j)]);
+                        Color(nodes[(i, j)]);
 
-                        Console.Write(nodes[(i,j)].cost);
+                        Console.Write(nodes[(i, j)].cost);
 
                         // Restore the original color
                         Console.ForegroundColor = originalColor;
