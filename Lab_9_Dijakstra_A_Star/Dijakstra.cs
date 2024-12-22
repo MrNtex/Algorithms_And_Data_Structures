@@ -49,22 +49,24 @@ namespace AIDS9
 
             foreach (Node node in sptSet.Keys)
             {
-                if(node.nodeType == NodeType.End)
+                Node curr = node;
+                if (node.nodeType == NodeType.End)
                 {
-                    Node curr = node;
+                    
 
                     while(curr != null)
                     {
                         shortest_path.Add(curr);
                         Console.WriteLine($"({curr.x};{curr.y}) -> ");
                         curr.nodeType = NodeType.Dijakstra;
-                        curr.cost = sptSet[curr].shortestDistance;
+                        
                         curr = sptSet[curr].prevNode;
                     }
 
                     shortest_path.Reverse();
-                    break;
                 }
+                if (curr != null) curr.cost = sptSet[curr].shortestDistance;
+
             }
 
             return shortest_path;

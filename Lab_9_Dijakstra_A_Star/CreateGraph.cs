@@ -17,6 +17,8 @@ namespace AIDS9
         End,
         Empty,
         Dijakstra,
+        AStar,
+        BellmanFord,
         DeadEnd
     }
 
@@ -144,6 +146,65 @@ namespace AIDS9
             return new List<Node>(nodes.Values);
         }
 
+        public static List<Node> PrimitiveGraph(string[] labyrinth)
+        {
+            Dictionary<(int, int), Node> primitiveNodes = new Dictionary<(int, int), Node>();
+            int rows = labyrinth.Length;
+            int cols = labyrinth[0].Length;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (labyrinth[i][j] == 'x')
+                    {
+                        continue;
+                    }
+
+                    Node node = new Node(i, j);
+
+                    if (labyrinth[i][j] == 'A')
+                    {
+                        node.nodeType = NodeType.Start;
+                    }else if (labyrinth[i][j] == 'B')
+                    {
+                        node.nodeType = NodeType.End;
+                    }
+
+                    primitiveNodes.Add((i, j), node);
+
+                    if (primitiveNodes.ContainsKey((i - 1, j)))
+                    {
+                        node.Neighbors.Add((primitiveNodes[(i - 1, j)], 1));
+                        primitiveNodes[(i - 1, j)].Neighbors.Add((node, 1));
+                    }
+                    if (primitiveNodes.ContainsKey((i, j - 1)))
+                    {
+                        node.Neighbors.Add((primitiveNodes[(i, j - 1)], 1));
+                        primitiveNodes[(i, j - 1)].Neighbors.Add((node, 1));
+                    }
+                    if (primitiveNodes.ContainsKey((i + 1, j)))
+                    {
+                        node.Neighbors.Add((primitiveNodes[(i + 1, j)], 1));
+                        primitiveNodes[(i + 1, j)].Neighbors.Add((node, 1));
+                    }
+                    if (primitiveNodes.ContainsKey((i, j + 1)))
+                    {
+                        node.Neighbors.Add((primitiveNodes[(i, j + 1)], 1));
+                        primitiveNodes[(i, j + 1)].Neighbors.Add((node, 1));
+                    }
+
+                    
+                }
+            }
+
+            nodes = primitiveNodes;
+            Console.WriteLine("Primitive Graph built");
+            PrintGraph();
+
+            return new List<Node>(nodes.Values);
+        }
+
         public static List<(int, int, int)> GetDirs(int row, int col, int cost)
         {
             List<(int, int, int)> dirs = new List<(int, int, int)>();
@@ -182,28 +243,36 @@ namespace AIDS9
                 case NodeType.Dijakstra:
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
+                case NodeType.AStar:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case NodeType.BellmanFord:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
                 default:
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     break;
             }
         }
-        public static void PrintGraph()
+        public static void PrintGraph(string fileName = "")
         {
             int rows = labyrinth.Length;
             int cols = labyrinth[0].Length;
 
-            foreach (KeyValuePair<(int, int), Node> entry in nodes)
-            {
-                // Save the current color
-                var originalColor = Console.ForegroundColor;
+            //foreach (KeyValuePair<(int, int), Node> entry in nodes)
+            //{
+            //    // Save the current color
+            //    var originalColor = Console.ForegroundColor;
 
-                Color(entry.Value);
+            //    Color(entry.Value);
 
-                Console.WriteLine($"{entry.Key} - {entry.Value.nodeType.ToString()}");
+            //    Console.WriteLine($"{entry.Key} - {entry.Value.nodeType.ToString()}");
 
-                // Restore the original color
-                Console.ForegroundColor = originalColor;
-            }
+            //    // Restore the original color
+            //    Console.ForegroundColor = originalColor;
+            //}
+
+            Console.WriteLine(fileName);
 
             for (int i = 0; i < rows; i++)
             {
@@ -216,7 +285,8 @@ namespace AIDS9
 
                         Color(nodes[(i, j)]);
 
-                        Console.Write(nodes[(i, j)].cost);
+                        int val = nodes[(i, j)].cost/ 10;
+                        Console.Write(val > 9 ? 9 : val);
 
                         // Restore the original color
                         Console.ForegroundColor = originalColor;
@@ -227,6 +297,31 @@ namespace AIDS9
                     }
                 }
                 Console.WriteLine();
+            }
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(fileName))
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        if (nodes.ContainsKey((i, j)))
+                        {
+                            file.Write(nodes[(i, j)].cost);
+                        }
+                        else
+                        {
+                            file.Write(labyrinth[i][j]);
+                        }
+                        file.Write(","); 
+                    }
+                    file.WriteLine();
+                }
             }
 
         }

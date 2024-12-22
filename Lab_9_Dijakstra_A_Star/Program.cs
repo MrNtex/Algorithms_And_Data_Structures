@@ -18,7 +18,27 @@
 
             Dijakstra dijakstra = new Dijakstra();
             dijakstra.ShortestPath(start, end, labyrinth);
+            Graph.PrintGraph("Dijakstra.txt");
+            AStar aStar = new AStar();
+            aStar.ShortestPath(start, end, labyrinth);
+            Graph.PrintGraph("Astar.txt");
+            BellmanFord bellmanFord = new BellmanFord();
+            bellmanFord.ShortestPath(start, end, labyrinth);
+            Graph.PrintGraph("BellmanFord.txt");
+
+            nodes = Graph.PrimitiveGraph(labyrinth);
+            start = nodes.Find(node => node.nodeType == NodeType.Start);
+            end = nodes.Find(node => node.nodeType == NodeType.End);
             Graph.PrintGraph();
+            dijakstra.ShortestPath(start, end, labyrinth);
+            
+            Graph.PrintGraph("Dijakstra_Primitive.txt");
+            aStar.ShortestPath(start, end, labyrinth);
+            
+            Graph.PrintGraph("Astar_Primitive.txt");
+
+            bellmanFord.ShortestPath(start, end, labyrinth);
+            Graph.PrintGraph("BellmanFord_Primitive.txt");
         }
     }
 }
