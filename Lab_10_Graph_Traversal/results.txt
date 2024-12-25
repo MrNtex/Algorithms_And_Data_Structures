@@ -1,0 +1,70 @@
+Graph created from file:
+Number of nodes: 4039
+Number of edges: 2019
+
+Test 1: Search from 3417 to 135
+Execution Time: 15 ms
+Execution Time: 17 ms
+Execution Time: 40 ms
+Execution Time: 42 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 2: Search from 2275 to 279
+Execution Time: 56 ms
+Execution Time: 2 ms
+Execution Time: 2 ms
+Execution Time: 2 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 3: Search from 882 to 42
+Execution Time: 62 ms
+Execution Time: 25 ms
+Execution Time: 23 ms
+Execution Time: 23 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 4: Search from 3115 to 69
+Execution Time: 11 ms
+Execution Time: 11 ms
+Execution Time: 11 ms
+Execution Time: 11 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 5: Search from 2430 to 1909
+Execution Time: 24 ms
+Execution Time: 1 ms
+Execution Time: 1 ms
+Execution Time: 1 ms
+Execution Time: 5874 ms
+Test 6: Search from 3439 to 1836
+Execution Time: 5 ms
+Execution Time: 1 ms
+Execution Time: 1 ms
+Execution Time: 1 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 7: Search from 262 to 2446
+Execution Time: 4 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 8: Search from 3734 to 3429
+Execution Time: 41 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Error: Exception of type 'System.OutOfMemoryException' was thrown.
+Test 9: Search from 2880 to 698
+Execution Time: 3 ms
+Execution Time: 2 ms
+Execution Time: 2 ms
+Execution Time: 2 ms
+Execution Time: 1253 ms
+Test 10: Search from 2090 to 2597
+Execution Time: 1 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Execution Time: 0 ms
+Execution Time: 1 ms
+
+Results:
+BFS Queue: 22,2 ms, with 0 erros.
+BFS Stack: 8 ms, with 0 erros.
+DFS Stack: 8,2 ms, with 0 erros.
+DFS Queue: 712,8 ms, with 7 erros.
