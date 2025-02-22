@@ -1,23 +1,43 @@
 class Solution(object):
     def recoverFromPreorder(self, traversal):
-        stack = []
-        n = len(traversal)
-        i = 0
-        while i<n:
-            level = 0
-            val = ""
-            while i<n and traversal[i]=='-':
-                level+=1
-                i+=1
-            while i<n and traversal[i]!='-':
-                val+=traversal[i]
-                i+=1
-            while len(stack)>level:
+        """
+        :type traversal: str
+        :rtype: Optional[TreeNode]
+        """
+        if len(traversal) == 0:
+            return None
+
+        root = TreeNode(-1)
+        stack = [root]
+
+        def addNum(num, dashes):
+
+            while dashes < len(stack)-1:
                 stack.pop()
-            node = TreeNode(int(val))
-            if stack and stack[-1].left==None:
-                stack[-1].left = node
-            elif stack:
-                stack[-1].right = node
-            stack.append(node)
-        return stack[0]
+
+            if stack[-1].left:
+                stack[-1].right = TreeNode(num)
+                stack.append(stack[-1].right)
+                return
+            stack[-1].left = TreeNode(num)
+            stack.append(stack[-1].left)
+
+        dashes = 0
+        num = -1
+        for c in traversal:
+            if c == '-':
+                if num == -1:
+                    dashes += 1
+                else:
+                    addNum(num, dashes)
+                    dashes = 1
+                    num = -1
+            else:
+                if num == -1:
+                    num = int(c)
+                else:
+                    num *= 10
+                    num += int(c)
+
+        addNum(num, dashes)
+        return root.left
